@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<sub-flow name="sales-data-mail-impl-subflow" doc:id="dc3cc1d2-dddd-4033-8630-9a1e76764976" >
+		<logger level="INFO" doc:name="start" doc:id="e2c3905d-97bb-4cb3-a3d4-b910a620df37" message="sending mail"/>
+		<ee:transform doc:name="transforming data to java" doc:id="2e802914-dd4e-4672-98f1-f392d1347b4d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload.body as String]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<email:send doc:name="send-mail" doc:id="dd91a104-7586-401a-b7eb-68f4ba609a74" config-ref="Email_SMTP" fromAddress="${smtp.user}" subject="Sales Records Summary">
+			<email:to-addresses >
+				<email:to-address value="harshithak964@gmail.com" />
+			</email:to-addresses>
+			<email:body contentType="text/html" />
+		</email:send>
+		<logger level="INFO" doc:name="end" doc:id="53167243-19a4-4e4f-9c6d-7075e8cab602" message="mail has been sent"/>
+	</sub-flow>
+</mule>
